@@ -8,4 +8,5 @@ find_package(libpqxx REQUIRED)
 find_package(GTest REQUIRED)
 message(STATUS ${Boost_LIBRARIES})
 add_executable(${PROJECT_NAME} src/main.cpp)
+#add_executable(${PROJECT_NAME} text-basic-metrics/tbm_main.cpp text-basic-metrics/tbm_main.cpp) строка для запуска моей части в text-basic-metrics
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES} ${antlr4-runtime_LIBRARIES} ${libpqxx_LIBRARIES} ${GTest_LIBRARIES})
