@@ -87,7 +87,34 @@ double Jaccard_metric(const std::vector <std::string>& tokens1, const std::vecto
     return static_cast<double> (intersect_sets.size()) / static_cast<double> (union_sets.size());
 }
 
-double textCompare(std::istream& fin1, std::istream& fin2){
+double Livenstain_dist(std::vector<std::string> tokens1, std::vector <std::string> tokens2){
+    unsigned long n = tokens1.size();
+    unsigned long m = tokens2.size();
+    int x, y, z;
+
+    std::vector <std::vector <int> > lev (n, std::vector <int> (m, 0));
+
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < m; j++){
+            if (std::min(i, j) == 0){
+                lev[i][j] = std::max(i, j);
+            }
+            else{
+                x = lev[i-1][j];
+                y = lev[i][j-1];
+                z = lev[i-1][j-1];
+                lev[i][j] = std::min(x, std::min(y, z));
+                if (tokens1[i] != tokens2[j]){
+                    lev[i][j]++;
+                }
+            }
+        }
+    }
+
+    return lev[n-1][m-1];
+}
+
+std::pair<double, double> textCompare(std::istream& fin1, std::istream& fin2){
     std::string line;
 
     std::string text1( (std::istreambuf_iterator<char>(fin1) ),
@@ -102,9 +129,10 @@ double textCompare(std::istream& fin1, std::istream& fin2){
     std::vector <std::string> tokens1 = tbm_tokenizer(non_comm_text1);
     std::vector <std::string> tokens2 = tbm_tokenizer(non_comm_text2);
 
-    double res = Jaccard_metric(tokens1, tokens2);
+    double res1 = Jaccard_metric(tokens1, tokens2);
+    double res2 = 1 - Livenstain_dist(tokens1, tokens2) / std::max(tokens1.size(), tokens2.size());
 
-    return res;
+    return {res1, res2};
 }
 
 int main(){
@@ -117,7 +145,9 @@ int main(){
     fin2.open("text-basic-metrics/code2.txt");
     assert(fin2.is_open());
 
-    std::cout << textCompare(fin1, fin2);
+    std::pair <double, double> metrics_res = textCompare(fin1, fin2);
+
+    std::cout << "Jaccard metric "<< metrics_res.first << "\nLivenstein distance: " << metrics_res.second;
     fin1.close();
     fin2.close();
 }

@@ -15,15 +15,15 @@ using namespace std;
 
 
 int main() {
-    stringstream ss;
-    string res;
+    stringstream ss1;
+    string res1;
     // ещё в код напихаю комментов
-    ss << "a bwfw ce ";
-    while(getline(ss, res, ' ')){ //комментарий после строки с кодом
+    ss1 << "a bwfw ce ";
+    while(getline(ss, res1, ' ')){ //комментарий после строки с кодом
         /*
          * летс гоу
          * худшее место для многострочного коммента
          */
-        cout << res << endl; /* многострочный однострочно */
+        cout << res1 << endl; /* многострочный однострочно */
     }
 }
